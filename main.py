@@ -47,9 +47,9 @@ async def get_latest_comment(thread_id: str) -> str:
     soup = BeautifulSoup(response.text, "html.parser")
     comments = soup.find_all("shreddit-comment")
     for comment in comments:
-        stickied = comment.find("shreddit-comment-badges", {"stickied": "true"})
+        badges = comment.find("shreddit-comment-badges")
+        stickied = badges is not None and ("stickied" in badges.attrs)
         if not stickied:
-            # content = comment.find("div", id="-post-rtjson-content")
             content = comment.find(
                 "div", id=lambda x: x and x.endswith("-post-rtjson-content")
             )
